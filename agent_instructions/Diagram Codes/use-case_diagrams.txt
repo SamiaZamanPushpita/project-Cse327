@@ -1,0 +1,251 @@
+Absolutely. Below is the consolidated set of all the PlantUML code we've produced, in order, so you can copy them directly into your diagram generator.
+
+I’m preserving the latest versions rather than the earlier drafts.
+
+1. Authentication & User Management Use Case
+@startuml
+left to right direction
+
+
+title Authentication & User Management Use Case Diagram
+
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+
+actor Guest
+actor User
+actor Tutor
+actor Student
+actor Parent
+
+
+User <|-- Tutor
+User <|-- Student
+User <|-- Parent
+
+
+rectangle "Tutor Management System" {
+
+
+    usecase "Register" as UC1
+    usecase "Login" as UC2
+    usecase "Login with Google" as UC3
+    usecase "Forgot Password" as UC4
+
+
+    usecase "Logout" as UC5
+    usecase "Update Profile" as UC6
+    usecase "Change Password" as UC7
+}
+
+
+Guest --> UC1
+Guest --> UC2
+Guest --> UC3
+Guest --> UC4
+
+
+User --> UC5
+User --> UC6
+User --> UC7
+
+
+@enduml
+2. Tutor Operations Use Case
+@startuml
+
+
+    usecase "Enroll Student" as UC5
+    usecase "Remove Student" as UC6
+
+
+    usecase "Schedule Session" as UC7
+    usecase "Reschedule Session" as UC8
+    usecase "Cancel Session" as UC9
+
+
+    usecase "Update Session Log" as UC10
+
+
+    usecase "Upload Learning Materials" as UC11
+
+
+    usecase "Create Assignment" as UC12
+    usecase "Grade Assignment" as UC13
+
+
+    usecase "Create Quiz" as UC14
+    usecase "Evaluate Quiz" as UC15
+
+
+    usecase "Mark Attendance" as UC16
+
+
+    usecase "Post Announcement" as UC17
+
+
+    usecase "View Student Progress" as UC18
+
+
+    usecase "Chat with Student" as UC19
+    usecase "Chat with Parent" as UC20
+
+
+    usecase "Send Notification" as UC21
+}
+
+
+Tutor --> UC1
+Tutor --> UC2
+Tutor --> UC3
+Tutor --> UC4
+Tutor --> UC5
+Tutor --> UC6
+Tutor --> UC7
+Tutor --> UC8
+Tutor --> UC9
+Tutor --> UC10
+Tutor --> UC11
+Tutor --> UC12
+Tutor --> UC13
+Tutor --> UC14
+Tutor --> UC15
+Tutor --> UC16
+Tutor --> UC17
+Tutor --> UC18
+Tutor --> UC19
+Tutor --> UC20
+
+
+UC8  ..> UC21 : <<include>>
+UC9  ..> UC21 : <<include>>
+UC11 ..> UC21 : <<include>>
+UC12 ..> UC21 : <<include>>
+UC14 ..> UC21 : <<include>>
+UC17 ..> UC21 : <<include>>
+
+
+@enduml
+3. Student Operations Use Case
+@startuml
+left to right direction
+
+
+title Student Operations Use Case Diagram
+
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+
+actor Student
+
+
+rectangle "Tutor Management System" {
+
+
+    usecase "View Calendar" as UC1
+    usecase "View Schedule" as UC2
+    usecase "Request Schedule Change" as UC3
+
+
+    usecase "View Session Notes" as UC4
+
+
+    usecase "View Materials" as UC5
+    usecase "Download Materials" as UC6
+
+
+    usecase "View Assignments" as UC7
+    usecase "Submit Assignment" as UC8
+
+
+    usecase "Attempt Quiz" as UC9
+
+
+    usecase "View Grades" as UC10
+    usecase "View Attendance" as UC11
+    usecase "View Progress" as UC12
+
+
+    usecase "View Announcements" as UC13
+
+
+    usecase "Chat with Tutor" as UC14
+}
+
+
+Student --> UC1
+Student --> UC2
+Student --> UC3
+Student --> UC4
+Student --> UC5
+Student --> UC6
+Student --> UC7
+Student --> UC8
+Student --> UC9
+Student --> UC10
+Student --> UC11
+Student --> UC12
+Student --> UC13
+Student --> UC14
+
+
+@enduml
+4. Parent Operations Use Case
+@startuml
+left to right direction
+
+
+title Parent Operations Use Case Diagram
+
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+
+actor Parent
+
+
+rectangle "Tutor Management System" {
+
+
+    usecase "View Calendar" as UC1
+
+
+    usecase "View Child Progress" as UC2
+    usecase "View Attendance" as UC3
+    usecase "View Assignments" as UC4
+    usecase "View Quiz Results" as UC5
+    usecase "View Session Log" as UC6
+    usecase "View Learning Materials" as UC7
+    usecase "View Announcements" as UC8
+
+
+    usecase "Chat with Tutor" as UC9
+}
+
+
+Parent --> UC1
+Parent --> UC2
+Parent --> UC3
+Parent --> UC4
+Parent --> UC5
+Parent --> UC6
+Parent --> UC7
+Parent --> UC8
+Parent --> UC9
+
+
+UC2 ..> UC3 : <<include>>
+UC2 ..> UC4 : <<include>>
+UC2 ..> UC5 : <<include>>
+UC2 ..> UC6 : <<include>>
+
+
+@enduml

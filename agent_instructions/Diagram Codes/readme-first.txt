@@ -1,0 +1,1 @@
+these are codes for sample diagrams chatgpt had provided according to the idea. you can get a better idea about the structure of the project from here. Yes. proceed.

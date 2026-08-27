@@ -1,0 +1,471 @@
+2. Class Diagram — User & Authentication
+@startuml
+
+
+title User & Authentication Class Diagram
+
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+
+abstract class User {
+    - userId : int
+    - name : String
+    - email : String
+    - passwordHash : String
+    - phone : String
+    - profileImage : String
+    - role : UserRole
+    - createdAt : DateTime
+    --
+    + register() : void
+    + login() : boolean
+    + loginWithGoogle() : boolean
+    + logout() : void
+    + updateProfile() : void
+    + changePassword() : void
+}
+
+
+class Tutor {
+    - tutorId : int
+    - specialization : String
+    - bio : String
+}
+
+
+class Student {
+    - studentId : int
+    - institution : String
+    - academicLevel : String
+}
+
+
+class Parent {
+    - parentId : int
+    - occupation : String
+}
+
+
+class ParentStudent {
+    - relationship : String
+    --
+    + linkStudent() : void
+    + unlinkStudent() : void
+}
+
+
+enum UserRole {
+    TUTOR
+    STUDENT
+    PARENT
+}
+
+
+User <|-- Tutor
+User <|-- Student
+User <|-- Parent
+
+
+Parent "1" -- "0..*" ParentStudent
+Student "1" -- "0..*" ParentStudent
+
+
+@enduml
+3. Class Diagram — Tutor, Batch & Session Management
+@startuml
+    --
+    + requestScheduleChange() : ScheduleChangeRequest
+}
+
+
+class Enrollment {
+    - enrollmentId : int
+    - enrolledAt : DateTime
+    - status : String
+    --
+    + enroll() : void
+    + cancel() : void
+}
+
+
+class Session {
+    - sessionId : int
+    - title : String
+    - startTime : DateTime
+    - endTime : DateTime
+    - location : String
+    - sessionType : SessionType
+    - status : SessionStatus
+    --
+    + schedule() : void
+    + reschedule() : void
+    + cancel() : void
+}
+
+
+class SessionParticipant {
+    - attendanceRequired : boolean
+}
+
+
+class ScheduleChangeRequest {
+    - requestId : int
+    - requestedStart : DateTime
+    - requestedEnd : DateTime
+    - reason : String
+    - status : String
+    - createdAt : DateTime
+    --
+    + submit() : void
+    + approve() : void
+    + reject() : void
+}
+
+
+enum SessionType {
+    ONE_TO_ONE
+    BATCH
+}
+
+
+enum SessionStatus {
+    SCHEDULED
+    COMPLETED
+    CANCELLED
+}
+
+
+Tutor "1" -- "0..*" Batch : manages
+Batch "1" -- "0..*" Enrollment
+Student "1" -- "0..*" Enrollment
+
+
+Batch "0..1" -- "0..*" Session
+Tutor "1" -- "0..*" Session
+
+
+Session "1" -- "0..*" SessionParticipant
+Student "1" -- "0..*" SessionParticipant
+
+
+Session "1" -- "0..*" ScheduleChangeRequest
+Student "1" -- "0..*" ScheduleChangeRequest
+
+
+@enduml
+4. Class Diagram — Learning & Assignments
+@startuml
+
+
+title Learning Materials & Assignment Management Class Diagram
+
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+
+class Tutor {
+    - tutorId : int
+    --
+    + uploadMaterial() : Material
+    + createAssignment() : Assignment
+    + gradeSubmission() : void
+}
+
+
+class Batch {
+    - batchId : int
+    - name : String
+}
+
+
+class Student {
+    - studentId : int
+    --
+    + accessMaterial() : void
+    + submitAssignment() : Submission
+}
+
+
+class Material {
+    - materialId : int
+    - title : String
+    - description : String
+    - fileUrl : String
+    - uploadedAt : DateTime
+    --
+    + upload() : void
+    + download() : File
+}
+
+
+class Assignment {
+    - assignmentId : int
+    - title : String
+    - description : String
+    - deadline : DateTime
+    - createdAt : DateTime
+    --
+    + create() : void
+    + update() : void
+    + publish() : void
+}
+
+
+class Submission {
+    - submissionId : int
+    - fileUrl : String
+    - submittedAt : DateTime
+    - score : Decimal
+    - feedback : String
+    - gradedAt : DateTime
+    --
+    + submit() : void
+    + grade() : void
+    + provideFeedback() : void
+}
+
+
+Tutor "1" -- "0..*" Material : uploads
+Batch "1" -- "0..*" Material : contains
+
+
+Tutor "1" -- "0..*" Assignment : creates
+Batch "1" -- "0..*" Assignment : contains
+
+
+Assignment "1" -- "0..*" Submission : receives
+Student "1" -- "0..*" Submission : makes
+
+
+@enduml
+5. Class Diagram — Quizzes & Attendance
+@startuml
+
+
+title Quiz & Attendance Management Class Diagram
+
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+
+class Tutor {
+    - tutorId : int
+    --
+    + createQuiz() : Quiz
+    + evaluateQuiz() : void
+    + markAttendance() : void
+}
+
+
+class Batch {
+    - batchId : int
+    - name : String
+}
+
+
+class Student {
+    - studentId : int
+    --
+    + attemptQuiz() : QuizAttempt
+    + viewResults() : void
+}
+
+
+class Quiz {
+    - quizId : int
+    - title : String
+    - description : String
+    - totalMarks : int
+    - createdAt : DateTime
+    --
+    + create() : void
+    + publish() : void
+    + evaluate() : void
+}
+
+
+class QuizQuestion {
+    - questionId : int
+    - questionText : String
+    - questionType : String
+    - marks : int
+}
+
+
+class QuizAttempt {
+    - attemptId : int
+    - score : Decimal
+    - attemptedAt : DateTime
+    --
+    + start() : void
+    + submit() : void
+    + calculateScore() : Decimal
+}
+
+
+class Session {
+    - sessionId : int
+    - title : String
+}
+
+
+class Attendance {
+    - attendanceId : int
+    - status : String
+    - markedAt : DateTime
+    --
+    + markPresent() : void
+    + markAbsent() : void
+}
+
+
+Tutor "1" -- "0..*" Quiz : creates
+Batch "1" -- "0..*" Quiz : contains
+
+
+Quiz "1" -- "1..*" QuizQuestion : contains
+Quiz "1" -- "0..*" QuizAttempt : has
+Student "1" -- "0..*" QuizAttempt : makes
+
+
+Session "1" -- "0..*" Attendance : records
+Student "1" -- "0..*" Attendance : has
+
+
+@enduml
+6. Class Diagram — Session Logs, Communication, Notifications & Progress
+@startuml
+
+title Session Logs, Communication, Notifications & Progress Class Diagram
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+abstract class User {
+    - userId : int
+    - name : String
+    - email : String
+    --
+    + sendMessage() : void
+}
+
+class Tutor {
+    - tutorId : int
+    --
+    + updateSessionLog() : void
+    + postAnnouncement() : void
+}
+
+class Student {
+    - studentId : int
+    --
+    + viewSessionLog() : void
+    + viewProgress() : void
+}
+
+class Parent {
+    - parentId : int
+    --
+    + viewSessionLog() : void
+    + viewProgress() : void
+}
+
+class Session {
+    - sessionId : int
+    - title : String
+}
+
+class SessionLog {
+    - logId : int
+    - topicsCovered : String
+    - homework : String
+    - notes : String
+    - nextSessionPlan : String
+    - createdAt : DateTime
+    --
+    + create() : void
+    + update() : void
+}
+
+class Announcement {
+    - announcementId : int
+    - title : String
+    - content : String
+    - createdAt : DateTime
+    --
+    + publish() : void
+}
+
+class Conversation {
+    - conversationId : int
+    - createdAt : DateTime
+    --
+    + create() : void
+    + addParticipant() : void
+}
+
+class ConversationParticipant {
+    - joinedAt : DateTime
+}
+
+class Message {
+    - messageId : int
+    - content : String
+    - sentAt : DateTime
+    - isRead : boolean
+    --
+    + send() : void
+    + markAsRead() : void
+}
+
+class Notification {
+    - notificationId : int
+    - title : String
+    - message : String
+    - type : String
+    - isRead : boolean
+    - createdAt : DateTime
+    --
+    + send() : void
+    + markAsRead() : void
+}
+
+class Progress {
+    - progressId : int
+    - attendancePercentage : Decimal
+    - assignmentAverage : Decimal
+    - quizAverage : Decimal
+    - updatedAt : DateTime
+    --
+    + calculateProgress() : Decimal
+    + generateSummary() : String
+}
+
+User <|-- Tutor
+User <|-- Student
+User <|-- Parent
+
+Session "1" -- "0..1" SessionLog
+Tutor "1" -- "0..*" SessionLog
+
+Tutor "1" -- "0..*" Announcement
+
+Conversation "1" -- "1..*" ConversationParticipant
+User "1" -- "0..*" ConversationParticipant
+
+Conversation "1" -- "0..*" Message
+User "1" -- "0..*" Message
+
+User "1" -- "0..*" Notification
+
+Student "1" -- "0..1" Progress
+
+@enduml

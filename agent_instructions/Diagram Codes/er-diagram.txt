@@ -1,0 +1,311 @@
+@startuml
+
+title Tutor Management System - Entity Relationship Diagram
+
+skinparam linetype ortho
+skinparam monochrome true
+skinparam shadowing false
+skinparam entity {
+    BackgroundColor white
+    BorderColor black
+}
+
+entity User {
+    * user_id : INT <<PK>>
+    --
+    name : VARCHAR
+    email : VARCHAR <<UNIQUE>>
+    password_hash : VARCHAR
+    phone : VARCHAR
+    profile_image : VARCHAR
+    role : ENUM
+    created_at : DATETIME
+}
+
+entity Tutor {
+    * tutor_id : INT <<PK, FK>>
+    --
+    specialization : VARCHAR
+    bio : TEXT
+}
+
+entity Student {
+    * student_id : INT <<PK, FK>>
+    --
+    institution : VARCHAR
+    academic_level : VARCHAR
+}
+
+entity Parent {
+    * parent_id : INT <<PK, FK>>
+    --
+    occupation : VARCHAR
+}
+
+entity ParentStudent {
+    * parent_id : INT <<PK, FK>>
+    * student_id : INT <<PK, FK>>
+    --
+    relationship : VARCHAR
+}
+
+entity Batch {
+    * batch_id : INT <<PK>>
+    --
+    tutor_id : INT <<FK>>
+    name : VARCHAR
+    subject : VARCHAR
+    description : TEXT
+    created_at : DATETIME
+}
+
+entity Enrollment {
+    * enrollment_id : INT <<PK>>
+    --
+    batch_id : INT <<FK>>
+    student_id : INT <<FK>>
+    enrolled_at : DATETIME
+    status : VARCHAR
+}
+
+entity Session {
+    * session_id : INT <<PK>>
+    --
+    batch_id : INT <<FK, NULL>>
+    tutor_id : INT <<FK>>
+    title : VARCHAR
+    start_time : DATETIME
+    end_time : DATETIME
+    location : VARCHAR
+    session_type : ENUM
+    status : VARCHAR
+}
+
+entity SessionParticipant {
+    * session_id : INT <<PK, FK>>
+    * student_id : INT <<PK, FK>>
+    --
+    attendance_required : BOOLEAN
+}
+
+entity SessionLog {
+    * log_id : INT <<PK>>
+    --
+    session_id : INT <<FK>>
+    tutor_id : INT <<FK>>
+    topics_covered : TEXT
+    homework : TEXT
+    notes : TEXT
+    next_session_plan : TEXT
+    created_at : DATETIME
+}
+
+entity ScheduleChangeRequest {
+    * request_id : INT <<PK>>
+    --
+    session_id : INT <<FK>>
+    student_id : INT <<FK>>
+    requested_start : DATETIME
+    requested_end : DATETIME
+    reason : TEXT
+    status : VARCHAR
+    created_at : DATETIME
+}
+
+entity Material {
+    * material_id : INT <<PK>>
+    --
+    batch_id : INT <<FK>>
+    tutor_id : INT <<FK>>
+    title : VARCHAR
+    description : TEXT
+    file_url : VARCHAR
+    uploaded_at : DATETIME
+}
+
+entity Assignment {
+    * assignment_id : INT <<PK>>
+    --
+    batch_id : INT <<FK>>
+    tutor_id : INT <<FK>>
+    title : VARCHAR
+    description : TEXT
+    deadline : DATETIME
+    created_at : DATETIME
+}
+
+entity Submission {
+    * submission_id : INT <<PK>>
+    --
+    assignment_id : INT <<FK>>
+    student_id : INT <<FK>>
+    file_url : VARCHAR
+    submitted_at : DATETIME
+    score : DECIMAL
+    feedback : TEXT
+    graded_at : DATETIME
+}
+
+entity Quiz {
+    * quiz_id : INT <<PK>>
+    --
+    batch_id : INT <<FK>>
+    tutor_id : INT <<FK>>
+    title : VARCHAR
+    description : TEXT
+    total_marks : INT
+    created_at : DATETIME
+}
+
+entity QuizQuestion {
+    * question_id : INT <<PK>>
+    --
+    quiz_id : INT <<FK>>
+    question_text : TEXT
+    question_type : VARCHAR
+    marks : INT
+}
+
+entity QuizAttempt {
+    * attempt_id : INT <<PK>>
+    --
+    quiz_id : INT <<FK>>
+    student_id : INT <<FK>>
+    score : DECIMAL
+    attempted_at : DATETIME
+}
+
+entity Attendance {
+    * attendance_id : INT <<PK>>
+    --
+    session_id : INT <<FK>>
+    student_id : INT <<FK>>
+    status : VARCHAR
+    marked_at : DATETIME
+}
+
+entity Announcement {
+    * announcement_id : INT <<PK>>
+    --
+    batch_id : INT <<FK>>
+    tutor_id : INT <<FK>>
+    title : VARCHAR
+    content : TEXT
+    created_at : DATETIME
+}
+
+entity Conversation {
+    * conversation_id : INT <<PK>>
+    --
+    created_at : DATETIME
+}
+
+entity ConversationParticipant {
+    * conversation_id : INT <<PK, FK>>
+    * user_id : INT <<PK, FK>>
+    --
+    joined_at : DATETIME
+}
+
+entity Message {
+    * message_id : INT <<PK>>
+    --
+    conversation_id : INT <<FK>>
+    sender_id : INT <<FK>>
+    content : TEXT
+    sent_at : DATETIME
+    is_read : BOOLEAN
+}
+
+entity Notification {
+    * notification_id : INT <<PK>>
+    --
+    user_id : INT <<FK>>
+    title : VARCHAR
+    message : TEXT
+    type : VARCHAR
+    is_read : BOOLEAN
+    created_at : DATETIME
+}
+
+entity Progress {
+    * progress_id : INT <<PK>>
+    --
+    student_id : INT <<FK>>
+    attendance_percentage : DECIMAL
+    assignment_average : DECIMAL
+    quiz_average : DECIMAL
+    updated_at : DATETIME
+}
+
+' User roles
+User ||--o| Tutor
+User ||--o| Student
+User ||--o| Parent
+
+' Parent relationships
+Parent ||--o{ ParentStudent
+Student ||--o{ ParentStudent
+
+' Tutor and batches
+Tutor ||--o{ Batch
+
+' Batch enrollment
+Batch ||--o{ Enrollment
+Student ||--o{ Enrollment
+
+' Sessions
+Batch ||--o{ Session
+Tutor ||--o{ Session
+
+' Session participants
+Session ||--o{ SessionParticipant
+Student ||--o{ SessionParticipant
+
+' Session logs
+Session ||--o| SessionLog
+Tutor ||--o{ SessionLog
+
+' Schedule change requests
+Session ||--o{ ScheduleChangeRequest
+Student ||--o{ ScheduleChangeRequest
+
+' Learning materials
+Batch ||--o{ Material
+Tutor ||--o{ Material
+
+' Assignments
+Batch ||--o{ Assignment
+Tutor ||--o{ Assignment
+Assignment ||--o{ Submission
+Student ||--o{ Submission
+
+' Quizzes
+Batch ||--o{ Quiz
+Tutor ||--o{ Quiz
+Quiz ||--o{ QuizQuestion
+Quiz ||--o{ QuizAttempt
+Student ||--o{ QuizAttempt
+
+' Attendance
+Session ||--o{ Attendance
+Student ||--o{ Attendance
+
+' Announcements
+Batch ||--o{ Announcement
+Tutor ||--o{ Announcement
+
+' Messaging
+Conversation ||--o{ ConversationParticipant
+User ||--o{ ConversationParticipant
+
+Conversation ||--o{ Message
+User ||--o{ Message
+
+' Notifications
+User ||--o{ Notification
+
+' Progress
+Student ||--o| Progress
+
+@enduml

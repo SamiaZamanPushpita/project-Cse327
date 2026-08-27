@@ -1,0 +1,642 @@
+5. User Authentication
+@startuml
+title User Authentication Sequence Diagram
+
+
+actor User
+boundary "Login Page" as UI
+control "Authentication Controller" as Auth
+database "User Database" as DB
+
+
+User -> UI : Enter email & password
+activate UI
+
+
+UI -> Auth : authenticate(credentials)
+activate Auth
+
+
+Auth -> DB : validateUser(credentials)
+activate DB
+
+
+alt Valid Credentials
+    DB --> Auth : User Record
+    deactivate DB
+
+
+    Auth --> UI : Authentication Successful
+    deactivate Auth
+
+
+    UI --> User : Redirect to Dashboard
+
+
+else Invalid Credentials
+    DB --> Auth : User Not Found
+    deactivate DB
+
+
+    Auth --> UI : Authentication Failed
+    deactivate Auth
+
+
+    UI --> User : Display Error Message
+end
+
+
+deactivate UI
+
+
+@enduml
+6. Create Batch & Enroll Student
+@startuml
+title Create Batch & Enroll Student Sequence Diagram
+
+
+actor Tutor
+boundary "Batch Management Page" as UI
+control "Batch Controller" as BatchController
+database "Database" as DB
+
+
+Tutor -> UI : Create Batch
+activate UI
+
+
+UI -> BatchController : createBatch(batchDetails)
+activate BatchController
+
+
+BatchController -> DB : saveBatch(batchDetails)
+activate DB
+
+
+DB --> BatchController : Batch Created
+deactivate DB
+
+
+BatchController --> UI : Batch Created Successfully
+
+
+Tutor -> UI : Enroll Student
+
+
+UI -> BatchController : enrollStudent(batchId, studentId)
+
+
+BatchController -> DB : saveEnrollment()
+activate DB
+
+
+DB --> BatchController : Enrollment Saved
+deactivate DB
+
+
+BatchController --> UI : Enrollment Successful
+
+
+UI --> Tutor : Display Updated Batch
+
+
+deactivate BatchController
+deactivate UI
+
+
+@enduml
+7. Schedule / Reschedule Session
+@startuml
+title Schedule / Reschedule Session Sequence Diagram
+
+
+actor Tutor
+boundary "Calendar Page" as UI
+control "Session Controller" as SessionController
+database "Database" as DB
+control "Notification Service" as Notify
+
+
+Tutor -> UI : Schedule Session
+activate UI
+
+
+UI -> SessionController : createSession(sessionInfo)
+activate SessionController
+
+
+SessionController -> DB : saveSession(sessionInfo)
+activate DB
+
+
+DB --> SessionController : Session Saved
+deactivate DB
+
+
+SessionController -> Notify : notifyStudents(sessionDetails)
+activate Notify
+
+
+Notify --> SessionController : Notification Delivered
+deactivate Notify
+
+
+SessionController --> UI : Session Scheduled
+
+
+UI --> Tutor : Update Calendar
+
+
+deactivate SessionController
+deactivate UI
+
+
+@enduml
+8. Upload Learning Materials
+@startuml
+title Upload Learning Materials Sequence Diagram
+
+
+actor Tutor
+boundary "Materials Page" as UI
+control "Material Controller" as MaterialController
+database "Database" as DB
+control "Notification Service" as Notify
+
+
+Tutor -> UI : Select File & Upload
+activate UI
+
+
+UI -> MaterialController : uploadMaterial(file)
+activate MaterialController
+
+
+MaterialController -> DB : saveMaterial(file)
+activate DB
+
+
+DB --> MaterialController : Material Saved
+deactivate DB
+
+
+MaterialController -> Notify : notifyStudents()
+activate Notify
+
+
+Notify --> MaterialController : Notification Delivered
+deactivate Notify
+
+
+MaterialController --> UI : Upload Successful
+
+
+UI --> Tutor : Display Confirmation
+
+
+deactivate MaterialController
+deactivate UI
+
+
+@enduml
+9. Assignment Submission & Grading
+@startuml
+title Assignment Submission & Grading Sequence Diagram
+
+
+actor Student
+actor Tutor
+
+
+boundary "Assignment Page" as UI
+control "Assignment Controller" as AssignmentController
+database "Database" as DB
+control "Notification Service" as Notify
+
+
+Student -> UI : Submit Assignment
+activate UI
+
+
+UI -> AssignmentController : submitAssignment(file)
+activate AssignmentController
+
+
+AssignmentController -> DB : saveSubmission()
+activate DB
+
+
+DB --> AssignmentController : Submission Saved
+deactivate DB
+
+
+AssignmentController -> Notify : notifyTutor()
+activate Notify
+
+
+Notify --> AssignmentController : Notification Delivered
+deactivate Notify
+
+
+AssignmentController --> UI : Submission Successful
+UI --> Student : Display Confirmation
+
+
+Tutor -> UI : Grade Assignment
+
+
+UI -> AssignmentController : gradeAssignment(score, feedback)
+
+
+AssignmentController -> DB : updateGrade()
+activate DB
+
+
+DB --> AssignmentController : Grade Saved
+deactivate DB
+
+
+AssignmentController -> Notify : notifyStudent()
+activate Notify
+
+
+Notify --> AssignmentController : Notification Delivered
+deactivate Notify
+
+
+AssignmentController --> UI : Grade Published
+
+
+UI --> Tutor : Display Success
+
+
+deactivate AssignmentController
+deactivate UI
+
+
+@enduml
+10. Quiz Attempt & Evaluation
+@startuml
+title Quiz Attempt & Evaluation Sequence Diagram
+
+
+actor Student
+actor Tutor
+
+
+boundary "Quiz Page" as UI
+control "Quiz Controller" as QuizController
+database "Database" as DB
+control "Notification Service" as Notify
+
+
+Tutor -> UI : Create Quiz
+activate UI
+
+
+UI -> QuizController : createQuiz()
+activate QuizController
+
+
+QuizController -> DB : saveQuiz()
+activate DB
+
+
+DB --> QuizController : Quiz Saved
+deactivate DB
+
+
+QuizController -> Notify : notifyStudents()
+activate Notify
+
+
+Notify --> QuizController : Notification Delivered
+deactivate Notify
+
+
+Student -> UI : Attempt Quiz
+
+
+UI -> QuizController : submitAnswers()
+
+
+QuizController -> DB : evaluateQuiz()
+activate DB
+
+
+DB --> QuizController : Quiz Result
+deactivate DB
+
+
+QuizController --> UI : Display Score
+UI --> Student : View Score
+
+
+deactivate QuizController
+deactivate UI
+
+
+@enduml
+11. Attendance Management
+@startuml
+title Attendance Management Sequence Diagram
+
+
+actor Tutor
+
+
+boundary "Attendance Page" as UI
+control "Attendance Controller" as AttendanceController
+database "Database" as DB
+
+
+Tutor -> UI : Open Attendance
+activate UI
+
+
+UI -> AttendanceController : loadStudentList()
+activate AttendanceController
+
+
+AttendanceController -> DB : retrieveStudents()
+activate DB
+
+
+DB --> AttendanceController : Student List
+deactivate DB
+
+
+AttendanceController --> UI : Display Student List
+
+
+Tutor -> UI : Mark Attendance
+
+
+UI -> AttendanceController : saveAttendance()
+
+
+AttendanceController -> DB : updateAttendance()
+activate DB
+
+
+DB --> AttendanceController : Attendance Saved
+deactivate DB
+
+
+AttendanceController --> UI : Attendance Updated
+
+
+UI --> Tutor : Display Confirmation
+
+
+deactivate AttendanceController
+deactivate UI
+
+
+@enduml
+12. Update Session Log
+@startuml
+title Update Session Log Sequence Diagram
+
+
+actor Tutor
+
+
+boundary "Session Log Page" as UI
+control "Session Log Controller" as SessionController
+database "Database" as DB
+control "Notification Service" as Notify
+
+
+Tutor -> UI : Open Session
+activate UI
+
+
+UI -> SessionController : loadSession()
+activate SessionController
+
+
+SessionController -> DB : retrieveSession()
+activate DB
+
+
+DB --> SessionController : Session Details
+deactivate DB
+
+
+Tutor -> UI : Update Session Log
+
+
+UI -> SessionController : saveSessionLog()
+
+
+SessionController -> DB : updateSessionLog()
+activate DB
+
+
+DB --> SessionController : Session Log Saved
+deactivate DB
+
+
+opt Parent Linked
+    SessionController -> Notify : notifyParent()
+    activate Notify
+
+
+    Notify --> SessionController : Notification Delivered
+    deactivate Notify
+end
+
+
+SessionController --> UI : Update Successful
+
+
+UI --> Tutor : Display Confirmation
+
+
+deactivate SessionController
+deactivate UI
+
+
+@enduml
+13. Post Announcement
+@startuml
+title Post Announcement Sequence Diagram
+
+
+actor Tutor
+
+
+boundary "Announcement Page" as UI
+control "Announcement Controller" as AnnouncementController
+database "Database" as DB
+control "Notification Service" as Notify
+
+
+Tutor -> UI : Create Announcement
+activate UI
+
+
+UI -> AnnouncementController : publishAnnouncement(title, content)
+activate AnnouncementController
+
+
+AnnouncementController -> DB : saveAnnouncement()
+activate DB
+
+
+DB --> AnnouncementController : Announcement Saved
+deactivate DB
+
+
+opt Notify Students
+    AnnouncementController -> Notify : notifyStudents()
+    activate Notify
+
+
+    Notify --> AnnouncementController : Notifications Delivered
+    deactivate Notify
+end
+
+
+AnnouncementController --> UI : Announcement Published
+
+
+UI --> Tutor : Display Success
+
+
+deactivate AnnouncementController
+deactivate UI
+
+
+@enduml
+14. Parent Views Child Progress
+@startuml
+title Parent Views Child Progress Sequence Diagram
+
+
+actor Parent
+
+
+boundary "Progress Dashboard" as UI
+control "Progress Controller" as ProgressController
+database "Database" as DB
+
+
+Parent -> UI : View Child Progress
+activate UI
+
+
+UI -> ProgressController : getProgress(studentId)
+activate ProgressController
+
+
+ProgressController -> DB : retrieveProgressData(studentId)
+activate DB
+
+
+DB --> ProgressController : Attendance, Grades,\nAssignments, Session Logs
+deactivate DB
+
+
+ProgressController --> UI : Progress Summary
+
+
+UI --> Parent : Display Dashboard
+
+
+deactivate ProgressController
+deactivate UI
+
+
+@enduml
+15. Messaging System
+@startuml
+title Messaging System Sequence Diagram
+
+
+actor User as Sender
+actor User as Receiver
+
+
+boundary "Chat Page" as UI
+control "Chat Controller" as ChatController
+database "Database" as DB
+control "Notification Service" as Notify
+
+
+Sender -> UI : Send Message
+activate UI
+
+
+UI -> ChatController : sendMessage(content)
+activate ChatController
+
+
+ChatController -> DB : saveMessage()
+activate DB
+
+
+DB --> ChatController : Message Saved
+deactivate DB
+
+
+ChatController -> Notify : notifyReceiver()
+activate Notify
+
+
+Notify --> ChatController : Notification Delivered
+deactivate Notify
+
+
+ChatController --> UI : Message Sent
+
+
+UI --> Sender : Display Sent Message
+
+
+deactivate ChatController
+deactivate UI
+
+
+@enduml
+16. View Calendar
+@startuml
+title View Calendar Sequence Diagram
+
+
+actor User
+
+
+boundary "Calendar Page" as UI
+control "Calendar Controller" as CalendarController
+database "Database" as DB
+
+
+User -> UI : Open Calendar
+activate UI
+
+
+UI -> CalendarController : loadSchedule(userId)
+activate CalendarController
+
+
+CalendarController -> DB : retrieveSessions(userId)
+activate DB
+
+
+DB --> CalendarController : Session List
+deactivate DB
+
+
+CalendarController --> UI : Calendar Data
+
+
+UI --> User : Display Calendar
+
+
+deactivate CalendarController
+deactivate UI
+
+
+@enduml

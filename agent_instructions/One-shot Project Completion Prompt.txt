@@ -1,0 +1,221 @@
+# Tutor Management System — One-Shot Implementation Prompt
+
+Build a clean, functional web-based **Tutor Management System** for a CSE327 Software Engineering project.
+
+The system is primarily for **independent tutors who teach one-to-one students and multiple batches**, with optional parent access. Keep the scope realistic for a university semester project. Prioritize a polished working prototype over unnecessary complexity.
+
+## Core Roles
+
+1. **Tutor**
+2. **Student**
+3. **Parent**
+
+Use role-based authentication/authorization. Support email/password authentication; Google Sign-In may be implemented if straightforward.
+
+## Core Features
+
+### Authentication
+
+* Register/login/logout
+* Forgot password
+* Role-based access
+* Profile management
+
+### Tutor Dashboard
+
+Tutor can:
+
+* Create/update/delete batches
+* Enroll/remove students
+* Manage one-to-one and batch students
+* View an integrated calendar
+* Schedule, reschedule, and cancel sessions
+* Upload learning materials
+* Create assignments
+* Grade submissions and provide feedback
+* Create quizzes and view/evaluate results
+* Mark attendance
+* Maintain a session log (topics covered, homework, notes)
+* Publish announcements
+* View student progress
+* Chat with students and parents
+
+### Student Dashboard
+
+Student can:
+
+* View personal calendar/schedule
+* View enrolled batch/session information
+* Access learning materials
+* Submit assignments
+* Attempt quizzes
+* View grades/feedback
+* View attendance
+* View progress
+* View session logs
+* View announcements
+* Request a schedule change
+* Chat with tutor
+
+### Parent Dashboard
+
+Parent can:
+
+* View linked child's schedule
+* View attendance
+* View assignment/quiz performance
+* View academic progress
+* View session logs
+* View announcements
+* Chat with tutor
+
+### Notifications
+
+Implement a simple in-app notification system for important events such as:
+
+* Session created/rescheduled/cancelled
+* Schedule change request
+* New assignment/quiz
+* New material
+* Grade/feedback published
+* Announcement
+
+Do NOT overengineer external WhatsApp/SMS integration. Keep it as an optional future feature.
+
+## Important Product Concept
+
+The system must support BOTH:
+
+* One-to-one tutoring
+* Batch-based tutoring
+
+The calendar and session model should therefore work for either a single student or multiple students.
+
+The main differentiator is centralized management of **students + batches + sessions + academic work + communication + progress + parents** in one place.
+
+## Suggested Data Model
+
+Use a relational database with entities approximately covering:
+
+* User
+* Tutor
+* Student
+* Parent
+* Batch
+* Enrollment
+* Session
+* SessionParticipant
+* SessionLog
+* LearningMaterial
+* Assignment
+* AssignmentSubmission
+* Quiz
+* QuizQuestion
+* QuizAttempt
+* Attendance
+* Announcement
+* Notification
+* Conversation
+* Message
+* ScheduleChangeRequest
+
+Adjust the schema when necessary for consistency. Maintain proper primary keys, foreign keys, relationships, constraints, and timestamps.
+
+## Technical Requirements
+
+Use a clean MVC/layered architecture appropriate for a CSE327 project.
+
+Requirements:
+
+* Responsive web UI
+* Clean navigation based on role
+* Relational database
+* REST-style backend/API where appropriate
+* Proper validation
+* Secure password handling
+* Role-based authorization
+* Error handling
+* Reusable components
+* Clean project structure
+* Seed/demo data for presentation
+
+Do not implement unnecessary enterprise infrastructure.
+
+## UI Direction
+
+Make the UI look like a polished productivity/education application, NOT an "AI-generated dashboard."
+
+Prioritize:
+
+* Clean typography
+* Good spacing
+* Clear hierarchy
+* Simple navigation
+* Calendar view
+* Tables where appropriate
+* Useful cards/statistics
+* Consistent forms
+* Responsive layouts
+* Accessible colors and contrast
+
+Avoid excessive gradients, glowing effects, random glassmorphism, excessive rounded cards, or generic "AI SaaS" aesthetics.
+
+## Demo Data
+
+Create realistic seed data so the application is immediately demonstrable:
+
+* 1 tutor
+* Several students
+* At least 2 batches
+* At least 1 one-to-one student
+* Upcoming/past sessions
+* Assignments
+* Submissions
+* Quizzes/results
+* Attendance
+* Session logs
+* Announcements
+* Notifications
+* Parent linked to at least one student
+* Sample conversations
+
+## Important Scope Rule
+
+This is a **CSE327 project prototype**, not a commercial LMS.
+
+Prioritize these workflows above everything else:
+
+1. Authentication
+2. Tutor/batch/student management
+3. Calendar/session scheduling
+4. Assignments
+5. Quizzes
+6. Attendance
+7. Session logs
+8. Progress monitoring
+9. Parent monitoring
+10. Messaging
+11. Notifications
+
+If time is limited, implement these workflows completely before adding secondary features.
+
+Do not add payment systems, video conferencing, AI tutoring, complex analytics, WhatsApp integration, institutional administration, or other large features unless they are trivial to stub.
+
+## Deliverable
+
+Produce a working application with:
+
+* Complete frontend
+* Backend/API
+* Database schema/migrations
+* Authentication
+* Role-based dashboards
+* Seed data
+* README with setup instructions
+* Clear folder structure
+* `.env.example`
+* Git-ready project
+
+Before finishing, test the primary workflows end-to-end and fix obvious UI, database, validation, and authorization errors.
+
+The result should be something we can demonstrate to our CSE327 faculty as a functional prototype of the proposed **Tutor Management System**.

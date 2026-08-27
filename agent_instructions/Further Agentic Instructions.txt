@@ -1,0 +1,8 @@
+
+Alright so what you want to do is, we are required by the faculty to atleast implement 6-8 design patterns in the project from the classic ones. Including the observer design pattern (if applicable), factory design pattern, and whatever is needed.
+
+Also output a presentation guide, possibly a markdown file. Guiding us how we should demonstrate the project to our faculty. And along with that a short pdf with screenshots of the project for demonstration, key features and functionalities. If it's possible.
+
+Also make the UI really cool and something that goes with the idea.. Go look for and install skills if needed.
+
+I know you can do this! I trust you. Let's go!!! Yayy yippeeee! ^_^
