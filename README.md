@@ -1,4 +1,8 @@
-# Tutor Management System (TMS) — CSE327 Project
+# Tutor Management System (TMS) — CSE327 Project-Group-3
+Samia Zaman Pushpita 2232969042<br>
+Sumaiya Basher Riyana 2221686642<br>
+Sabbir Hossain 1731900042<br>
+Rifaqat Islam Tasin 2211943042
 
 > **A full-stack, web-based Tutor Management System built for CSE327 Software Engineering, supporting Independent Tutors, 1-on-1 Students, Batch Classes, Parents, and 8 Classic GoF Design Patterns.**
 
