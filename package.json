@@ -1,0 +1,27 @@
+{
+  "name": "tutor-management-system",
+  "version": "1.0.0",
+  "description": "Comprehensive Tutor Management System for CSE327 Software Engineering Project",
+  "main": "backend/server.js",
+  "scripts": {
+    "setup": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "seed": "node backend/database/seed.js",
+    "server": "node backend/server.js",
+    "client": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test:api": "node backend/tests/test_api.js"
+  },
+  "keywords": [
+    "tutor",
+    "management",
+    "system",
+    "education",
+    "design-patterns",
+    "cse327"
+  ],
+  "author": "CSE327 Student Team",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
